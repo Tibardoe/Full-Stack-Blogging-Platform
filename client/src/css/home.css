@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primaryColor: #000D07;
+    --secondaryColor: #042616;
+    --accentCOlor: #125938;
+    --headingText: "Lora", serif;
+    --bodyText: "Titillium Web", sans-serif;
+}
+
+body {
+    background-color: var(--primaryColor);
+    color: #FFFFFF;
+}
+
+.image-box {
+    height: 300px;
+    width: 300px;
+}
+
+.image-box>img {
+    height: 100%;
+    width: 100%;
+    background: none;
+}
+
+.hero-btn {
+    background-color: var(--accentCOlor);
+    border: none;
+    padding: 15px 20px;
+    border-radius: 50px;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.header-section {
+    display: flex;
+    justify-content: flex-end;
+    padding: 30px;
+}
+
+.intro-texts>h1 {
+    font-size: 5rem;
+    font-family: var(--headingText);
+}
+
+.intro-texts>p {
+    font-family: var(--bodyText);
+    font-size: 1.2rem;
+}
+
+.intro-section>button {
+    justify-content: center;
+}
+
+.hero-section {
+    display: flex;
+    justify-content: center;
+}
