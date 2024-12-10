@@ -17,6 +17,10 @@ body {
     color: #FFFFFF;
 }
 
+header {
+    position: relative;
+}
+
 .image-box {
     height: 300px;
     width: 300px;
@@ -36,12 +40,29 @@ body {
     color: #FFFFFF;
     font-weight: bold;
     font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.2s ease-in;
+}
+
+.hero-btn:hover {
+    background-color: #137044;
+    color: black;
 }
 
 .header-section {
     display: flex;
     justify-content: flex-end;
     padding: 30px;
+}
+
+.intro-texts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.intro-texts button {
+    margin: auto 0;
 }
 
 .intro-texts>h1 {
@@ -52,10 +73,6 @@ body {
 .intro-texts>p {
     font-family: var(--bodyText);
     font-size: 1.2rem;
-}
-
-.intro-section>button {
-    justify-content: center;
 }
 
 .hero-section {

@@ -1,0 +1,186 @@
+:root {
+    --primaryColor: #000D07;
+    --secondaryColor: #042616;
+    --accentCOlor: #125938;
+    --headingText: "Lora", serif;
+    --bodyText: "Titillium Web", sans-serif;
+}
+
+.auth-box {
+    display: grid;
+    place-items: center;
+    height: 100dvh;
+    position: absolute;
+    top: 10px;
+    width: 100%;
+}
+
+.auth-card {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #1A1919;
+    padding: 20px 200px;
+    border-radius: 10px;
+    position: relative;
+    animation: fadeIn;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-in;
+    animation-iteration-count: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        top: -400px;
+    }
+
+    to {
+        opacity: 1;
+        top: 0;
+    }
+}
+
+.auth-card>svg {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.auth-card h1 {
+    font-size: 4rem;
+    margin-bottom: 30px;
+    font-family: var(--headingText);
+    text-align: center;
+}
+
+.input-box {
+    width: 100%;
+    border-radius: 50px;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    padding: 10px 40px;
+    font-size: 1.5rem;
+    font-family: var(--bodyText);
+    margin-bottom: 30px;
+}
+
+.input-box input {
+    background: none;
+    flex: 1;
+    font-size: 1.5rem;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10px 20px;
+}
+
+.input-box input::placeholder {
+    text-align: center;
+    color: white;
+}
+
+.gauth-box {
+    width: 100%;
+    border-radius: 50px;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    font-size: 1.5rem;
+    font-family: var(--bodyText);
+    margin-bottom: 5px;
+}
+
+.gauth-box p {
+    text-align: center;
+    flex: 1;
+}
+
+.gauth-box img {
+    transform: scale(0.6);
+}
+
+form button {
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+form p {
+    text-align: center;
+    font-size: 1.3rem;
+    font-family: var(--bodyText);
+}
+
+form>p>span {
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.remember-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.remember-section * {
+    font-size: 1.3rem;
+}
+
+.remember-section>p {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox {
+    width: 25px;
+    height: 25px;
+    background-color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.remember-me input[type="checkbox"]:checked+span {
+    background-color: var(--secondaryColor);
+}
+
+.remember-me input[type="checkbox"]:checked+span::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 15px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.or-section {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-family: var(--bodyText);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.or-section>span {
+    border: 1px solid rgba(255, 255, 255, 0.33);
+    flex: 1;
+}
