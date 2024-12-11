@@ -14,7 +14,7 @@ function Signup() {
     const navigate = useNavigate();
 
     function handleClick() {
-        navigate("/posts")
+        navigate("/blogs")
     };
 
     function signinClick() {

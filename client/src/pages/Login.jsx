@@ -16,7 +16,7 @@ function Login(props) {
     const navigate = useNavigate();
 
     function handleClick() {
-        navigate("/posts");
+        navigate("/blogs");
     };
 
     function passwordReset() {

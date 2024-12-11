@@ -1,0 +1,182 @@
+:root {
+    --primaryColor: #000D07;
+    --secondaryColor: #042616;
+    --accentCOlor: #125938;
+    --headingText: "Lora", serif;
+    --bodyText: "Titillium Web", sans-serif;
+}
+
+nav {
+    display: flex;
+    width: 90%;
+    margin: auto;
+    justify-content: space-between;
+    padding: 30px 0;
+    font-family: var(--headingText);
+    align-items: center;
+}
+
+nav>h1 {
+    cursor: pointer;
+}
+
+.header {
+    border-bottom: 1px solid white;
+}
+
+.nav-right {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.write {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.profile {
+    height: 50px;
+    width: 50px;
+    background-color: var(--secondaryColor);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 35px;
+    cursor: pointer;
+}
+
+.posts {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 50px auto;
+    border-bottom: 1px solid white;
+}
+
+.posts * {
+    margin-bottom: 20px;
+    font-family: var(--bodyText);
+}
+
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    font-size: 1.2rem;
+}
+
+.user-profile>.profile {
+    padding: 0;
+    font-size: 1.7rem;
+    font-family: var(--headingText);
+    position: relative;
+}
+
+.title {
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.content {
+    text-align: justify;
+    font-size: 1.2rem;
+}
+
+small {
+    font-weight: bold;
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    width: 150px;
+    position: absolute;
+    top: 80px;
+    right: 35px;
+}
+
+.profile-menu>span {
+    padding: 10px 20px;
+    color: black;
+    font-family: var(--bodyText);
+    cursor: pointer;
+}
+
+.profile-menu>span:nth-child(1) {
+    border-bottom: 1px solid black;
+}
+
+.edit-btn,
+.delete-btn {
+    color: white;
+    font-family: var(--bodyText);
+    padding: 5px 10px;
+    border: none;
+    border-radius: 7px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: 0.2s ease-in;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background-color: var(--accentCOlor);
+}
+
+.edit-btn:hover {
+    background-color: #042616;
+}
+
+.delete-btn {
+    background: none;
+    border: 1px solid white;
+}
+
+.delete-btn:hover {
+    border: none;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.date-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edit-form,
+.post-form {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 50px auto;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.edit-form>*,
+.post-form>* {
+    margin-bottom: 20px;
+}
+
+.inputs {
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    width: 100%;
+}
