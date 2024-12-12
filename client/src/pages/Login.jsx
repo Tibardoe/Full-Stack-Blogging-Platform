@@ -6,17 +6,35 @@ import '../css/login.css';
 import { useNavigate } from "react-router-dom";
 import Signup from "./Signup";
 import Reset from "./Reset";
+import axios from "axios";
 
 
 function Login(props) {
     const [signup, setSignup] = useState(false);
     const [resetPassword, setResetPassword] = useState(false);
     const [exitAuth, setExitAuth] = useState(false);
+    const [loginDetails, setLoginDetails] = useState({
+        username: "",
+        password: ""
+    });
 
     const navigate = useNavigate();
 
-    function handleClick() {
+    async function handleLogin(event) {
+        event.preventDefault();
+
+        const { username, password } = loginDetails;
+        const response = await axios.post("/login", { username, password });
+        alert(response.data.message);
         navigate("/blogs");
+
+    }
+
+    function handleLoginDetails(event) {
+        const { name, value } = event.target;
+        setLoginDetails(prevValues => {
+            return { ...prevValues, [name]: value };
+        });
     };
 
     function passwordReset() {
@@ -48,7 +66,7 @@ function Login(props) {
                         <h1>Welcome Back</h1>
                         <GoogleAuth text="Sign in with Google" />
                         <div className="or-section"><span></span>Or <span></span></div>
-                        <form>
+                        <form onSubmit={handleLogin}>
                             <Input
                                 name="username"
                                 logo=<svg xmlns=" http://www.w3.org/2000/svg" width="30" height="30"
@@ -56,6 +74,8 @@ function Login(props) {
                                         d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4" /></svg>
                                 text="Username"
                                 type="text"
+                                value={loginDetails.username}
+                                onChange={handleLoginDetails}
                             />
                             <Input
                                 name="password"
@@ -65,6 +85,8 @@ function Login(props) {
                                 text="Password"
                                 type="password"
                                 autoComplete="current-password"
+                                value={loginDetails.password}
+                                onChange={handleLoginDetails}
                             />
                             <div className="remember-section">
 
@@ -76,7 +98,7 @@ function Login(props) {
 
                                 <p onClick={passwordReset}>Forgotten Password?</p>
                             </div>
-                            <Button onSubmit={handleClick} text="Submit" />
+                            <Button text="Submit" />
                             <p>Don't have an account yet? <span onClick={signupClick}>Sign Up</span> </p>
                         </form>
 

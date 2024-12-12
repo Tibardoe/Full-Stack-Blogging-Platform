@@ -10,6 +10,8 @@ function Input(props) {
                 placeholder={props.text}
                 autoComplete="props.autoComplete"
                 name={props.name}
+                value={props.value}
+                onChange={props.onChange}
                 required />
         </div>
     );

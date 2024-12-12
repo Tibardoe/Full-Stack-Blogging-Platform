@@ -6,16 +6,38 @@ import { useNavigate } from "react-router-dom";
 import "../css/login.css";
 import "../css/home.css";
 import Login from "./Login";
+import axios from "axios";
 
 function Signup() {
     const [signin, setSignin] = useState(false);
     const [exitAuth, setExitAuth] = useState(false);
+    const [signUpDetails, setSignUpDetails] = useState({
+        username: "",
+        password: "",
+        repeatPassword: ""
+
+    });
 
     const navigate = useNavigate();
 
-    function handleClick() {
-        navigate("/blogs")
-    };
+    async function handleRegister(event) {
+        event.preventDefault();
+        const { username, password, repeatPassword } = signUpDetails;
+
+        if (password !== repeatPassword) {
+            alert("Password does not match!");
+            return;
+        }
+
+        try {
+            const response = await axios.post("/register", { username, password });
+            alert(response.data.message);
+            navigate("/login");
+        } catch (error) {
+            console.error("Error during registration:", error.response?.data?.message || error.message);
+            alert(error.response?.data?.message || "An error occurred. Please try again.");
+        }
+    }
 
     function signinClick() {
         setSignin(true);
@@ -23,6 +45,13 @@ function Signup() {
 
     function handleExit() {
         setExitAuth(true);
+    };
+
+    function handleSignUpDetails(event) {
+        const { name, value } = event.target;
+        setSignUpDetails(prevValues => {
+            return { ...prevValues, [name]: value }
+        });
     };
 
     if (exitAuth) {
@@ -41,7 +70,7 @@ function Signup() {
                     <h1>Join Freedom</h1>
                     <GoogleAuth text="Sign Up with Google" />
                     <div className="or-section"><span></span>Or <span></span></div>
-                    <form>
+                    <form onSubmit={handleRegister}>
                         <Input
                             name="username"
                             logo=<svg xmlns=" http://www.w3.org/2000/svg" width="30" height="30"
@@ -49,6 +78,8 @@ function Signup() {
                                     d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4" /></svg>
                             text="Username"
                             type="text"
+                            value={signUpDetails.username}
+                            onChange={handleSignUpDetails}
                         />
                         <Input
                             name="password"
@@ -58,17 +89,21 @@ function Signup() {
                             text="Password"
                             type="password"
                             autoComplete="current-password"
+                            value={signUpDetails.password}
+                            onChange={handleSignUpDetails}
                         />
                         <Input
-                            name="password"
+                            name="repeatPassword"
                             logo=<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
                                 viewBox="0 0 24 24"><path fill="currentColor"
                                     d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3" /></svg>
                             text="Re-enter password"
                             type="password"
                             autoComplete="current-password"
+                            value={signUpDetails.repeatPassword}
+                            onChange={handleSignUpDetails}
                         />
-                        <Button onSubmit={handleClick} text="Submit" />
+                        <Button text="Submit" />
                         <p>Don't have an account yet? <span onClick={signinClick}>Sign In</span> </p>
                     </form>
 
