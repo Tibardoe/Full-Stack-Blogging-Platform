@@ -1,6 +1,6 @@
 import express from "express";
 import axios from "axios";
-import pg from "pg";
+import pkg from "pg";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -16,21 +16,21 @@ dotenv.config();
 
 const app = express();
 
+const { Pool } = pkg;
+
 const pgSession = connectPgSimple(session);
 
 const port = 5000;
 
-const db = new pg.Client({
+const pool = new Pool({
     user: process.env.USER,
     host: process.env.HOST,
-    password: "Alpha295!",
+    password: process.env.PASSWORD.trim(),
     database: process.env.DATABASE,
     port: process.env.PORT,
 })
 
-console.log(typeof (process.env.PASSWORD));
-
-db.connect();
+pool.connect();
 
 app.use(cors());
 
@@ -40,7 +40,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
     store: new pgSession({
-        db: db
+        pool: pool,
+        tableName: "session"
     }),
     secret: process.env.SECRET,
     resave: false,
@@ -49,7 +50,7 @@ app.use(session({
 
 passport.use(new LocalStrategy(async (username, password, done) => {
     try {
-        const response = await db.query("SELECT * FROM user_account WHERE username = $1", [username]);
+        const response = await pool.query("SELECT * FROM user_account WHERE username = $1", [username]);
         const user = response.rows[0];
 
         if (!user) {
@@ -70,7 +71,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
     try {
-        const response = await db.query("SELECT * FROM user_account WHERE id = $1", [id]);
+        const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [id]);
         const user = response.rows[0];
         done(null, user);
     } catch (error) {
@@ -84,11 +85,11 @@ app.use(flash());
 
 // create a new user
 app.post("/register", async (req, res) => {
-    const { username, password, repeatPassword } = req.body;
+    const { username, password } = req.body;
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-        await db.query("INSERT INTO user_account(username, password) VALUES ($1, $2)", [username, hashedPassword]);
+        await pool.query("INSERT INTO user_account(username, password) VALUES ($1, $2)", [username, hashedPassword]);
         res.json({ message: "User registered successfully!" });
     } catch (error) {
         res.status(500).json({ message: "Error registering user", error: error.message });
@@ -111,19 +112,36 @@ app.post("/reset-password/:token", async (req, res) => {
 
 // create login
 
-app.post("/login", passport.authenticate("local"), (req, res) => {
-    res.json({ message: "Logged in successfully!" });
+app.post("/login", passport.authenticate("local"), async (req, res) => {
+    const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [req.user.id]);
+    const user = response.rows[0];
+    res.json({ message: "Logged in successfully!", user: user });
+
 });
 
 // show blog posts
 
 app.get("/blogs", async (req, res) => {
+    const id = req.user.id;
+    try {
+        if (!req.isAuthenticated()) {
+            return res.status(401).json({ message: "Unauthorized access!" });
+        }
+        const response = await pool.query("SELECT * FROM blog_post JOIN user_account ON user_account.id = blog_post.author_id");
+        const userInitials = await pool.query("SELECT username FROM user_account WHERE id = $1", [id]);
+        res.json({ blogs: response.rows, userInitials: userInitials.rows[0].username });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch blogs", error: error.message });
+    }
+});
+
+// User Blogs
+app.get("/user-blogs", async (req, res) => {
     if (req.isAuthenticated()) {
-        const response = await db.query("SELECT * FROM blog_post");
-        const result = response.rows;
-        res.json({ blogs: result });
-    } else {
-        res.status(401).json({ message: "Unauthorized access!" });
+        const id = req.user.id;
+        const response = await pool.query(
+            "SELECT blog_post.id AS blog_id, blog_post.title, blog_post.content, blog_post.author_id, blog_post.date_posted, user_account.id AS user_id, user_account.username, user_account.password FROM blog_post JOIN user_account ON user_account.id = blog_post.author_id WHERE blog_post.author_id = $1", [id]);
+        res.json({ userBlogs: response.rows });
     };
 });
 
@@ -132,7 +150,8 @@ app.get("/blogs", async (req, res) => {
 app.post("/post-blog", async (req, res) => {
     const { title, content } = req.body;
     if (req.isAuthenticated()) {
-        const response = await db.query("INSERT INTO blog_post(title, content) VALUES($1, $2) RETURNING *", [title, content]);
+        const author_id = req.user.id;
+        const response = await pool.query("INSERT INTO blog_post(title, content, author_id) VALUES($1, $2, $3) RETURNING *", [title, content, author_id]);
         const result = response.rows;
         res.json({ post: result });
     } else {
@@ -144,24 +163,57 @@ app.post("/post-blog", async (req, res) => {
 
 app.patch("/edit-post/:id", async (req, res) => {
     const { id } = req.params;
+    const { title, content } = req.body;
+
     if (req.isAuthenticated()) {
-        const response = await db.query("SELECT * FROM blog_post WHERE id = $1", [id]);
+        try {
+            await pool.query(
+                "UPDATE blog_post SET title = $1, content = $2, date_updated = NOW() WHERE id = $3",
+                [title, content, id]
+            );
+            res.json({ message: "Post updated successfully!" });
+        } catch (error) {
+            res.status(500).json({ message: "Error updating post", error: error.message });
+        }
+    } else {
+        res.status(401).json({ message: "Unauthorized access!" });
+    }
+});
+
+app.get("/edit-post/:id", async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing post ID!" });
+    }
+
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized access!" });
+    }
+
+    try {
+        const response = await pool.query("SELECT * FROM blog_post WHERE id = $1", [id]);
+        console.log(response.rows);
+
         const foundPost = response.rows[0];
         if (foundPost) {
-            res.json({ foundPost: foundPost });
+            res.json({ foundPost });
         } else {
-            res.json({ message: "Post not found!" });
-        };
-    };
-
+            res.status(404).json({ message: "Post not found!" });
+        }
+    } catch (error) {
+        console.error("Error fetching post:", error);
+        res.status(500).json({ message: "Error fetching post", error: error.message });
+    }
 });
+
 
 // delete blogs
 
 app.delete("/delete/:id", async (req, res) => {
     const { id } = req.params;
     if (req.isAuthenticated()) {
-        await db.query("DELETE FROM blog_post WHERE id = $1", [id]);
+        await pool.query("DELETE FROM blog_post WHERE id = $1", [id]);
         res.json({ message: "Blog post deleted!" });
     } else {
         res.status(401).json({ message: "Unauthorized access!" });

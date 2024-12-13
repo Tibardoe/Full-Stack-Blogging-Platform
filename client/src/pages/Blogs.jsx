@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WriteNavItem from "../components/WriteNavItem";
 import Profile from '../components/Profile';
 import "../css/blogs.css";
 import PostItem from "./PostItem";
 import ProfileMenu from "../components/ProfileMenu";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Blogs() {
     const [clickProfile, setClickProfile] = useState(false);
+    const [blogPosts, setBlogPosts] = useState([]);
+    const [initials, setInitials] = useState("");
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            try {
+                const response = await axios.get("/blogs");
+                setBlogPosts(response.data.blogs);
+                setInitials(response.data.userInitials);
+            } catch (error) {
+                alert("Unauthorized access")
+                navigate("/")
+            }
+
+        };
+
+        fetchBlogs()
+    }, [navigate]);
+
 
     function handleClickProfile() {
         setClickProfile(prevState => !prevState)
@@ -19,19 +41,23 @@ function Blogs() {
                     <h1>FREEEDOM</h1>
                     <div className="nav-right">
                         <WriteNavItem />
-                        <Profile onClick={handleClickProfile} initials="T" />
+                        <Profile onClick={handleClickProfile} initials={initials.slice(0, 1)} />
                         {clickProfile && <ProfileMenu />}
                     </div>
                 </nav>
             </div>
-            <PostItem
-                title="The standard Lorem Ipsum passage, used since the 1500s"
-                content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            />
-            <PostItem
-                title="The standard Lorem Ipsum passage, used since the 1500s"
-                content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            />
+            <ul>
+                {blogPosts.map((post, index) => {
+                    return (<li key={index}><PostItem
+                        title={post.title}
+                        content={post.content}
+                        date={post.date_posted}
+                        username={post.username.split("@")[0]}
+                        initials={post.username.slice(0, 1)}
+                    /></li>)
+                })}
+            </ul>
+
         </div>
     );
 };

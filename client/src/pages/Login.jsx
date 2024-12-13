@@ -17,6 +17,7 @@ function Login(props) {
         username: "",
         password: ""
     });
+    const [user, setUser] = useState(null);
 
     const navigate = useNavigate();
 
@@ -25,8 +26,10 @@ function Login(props) {
 
         const { username, password } = loginDetails;
         const response = await axios.post("/login", { username, password });
-        alert(response.data.message);
-        navigate("/blogs");
+        if (response.data.user) {
+            setUser(response.data.user);
+            navigate("/blogs");
+        }
 
     }
 

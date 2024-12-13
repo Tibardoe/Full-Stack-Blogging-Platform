@@ -19,7 +19,7 @@ function App() {
                 <Route path="/reset-password" element={<Reset />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/user-profile" element={<UserPage />} />
-                <Route path="/edit-post" element={<EditPage />} />
+                <Route path="/edit-post/:id" element={<EditPage />} />
                 <Route path="/post-blog" element={<PostBlog />} />
             </Routes>
         </Router>

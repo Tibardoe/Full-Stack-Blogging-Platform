@@ -5,20 +5,20 @@ import { useNavigate } from "react-router-dom";
 
 function PostItem(props) {
     const navigate = useNavigate();
+
+
     return (
         <div className="posts">
-            <UserProfile name="Big Tee" />
+            <UserProfile name={props.username} initials={props.initials} />
             <h2 className="title">{props.title}</h2>
             <p className="content"> {props.content}</p>
             <div className="date-section">
-                <small>
-                    Feb 12, 2024
-                </small>
+                <small>{props.date}</small>
 
                 {props.isOwnProfilePage && (
                     <div className="actions">
-                        <button onClick={() => navigate("/edit-post")} className="edit-btn">Edit</button>
-                        <button onClick={() => navigate("/delete-post")} className="delete-btn">Delete</button>
+                        <button onClick={() => navigate(`/edit-post/${props.id}`)} className="edit-btn">Edit</button>
+                        <button onClick={() => navigate(`/delete-post/${props.id}`)} className="delete-btn">Delete</button>
                     </div>
                 )}
 

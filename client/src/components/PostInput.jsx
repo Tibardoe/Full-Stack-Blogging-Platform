@@ -3,10 +3,8 @@ import React from "react";
 function PostInput(props) {
     return (
         props.inputType === "input" ?
-            <input className="inputs" value={props.content} /> :
-            <textarea className="inputs" value={props.content} rows={props.rows} />
-
-        // <props.inputType className="inputs" value={props.content} rows={props.rows} />
+            <input onChange={props.onChange} name={props.name} className="inputs" value={props.value} /> :
+            <textarea onChange={props.onChange} name={props.name} className="inputs" value={props.value} rows={props.rows} />
     )
 }
 
