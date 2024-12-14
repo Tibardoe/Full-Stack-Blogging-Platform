@@ -28,8 +28,9 @@ function EditPage() {
 
     async function handleEdit(event) {
         event.preventDefault();
+        const { title, content } = editPost;
         try {
-            await axios.patch(`/edit-post/${id}`, editPost);
+            await axios.patch(`/edit-post/${id}`, { title, content });
             alert("Post updated successfully!");
             navigate("/user-profile");
         } catch (error) {

@@ -1,5 +1,6 @@
 import React from "react";
 import "../css/blogs.css";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function ProfileMenu() {
@@ -9,10 +10,21 @@ function ProfileMenu() {
         navigate("/user-profile");
     };
 
+    async function handleSignOut() {
+        try {
+            await axios.post("/logout");
+            navigate("/");
+        } catch (error) {
+            console.error("Error during logout:", error.message);
+            alert("Failed to log out. Please try again.");
+        }
+    }
+
+
     return (
         <div className="profile-menu">
             <span onClick={handleUserProfile}>My Profile</span>
-            <span onClick={() => navigate("/")}>Sign Out</span>
+            <span onClick={handleSignOut}>Sign Out</span>
         </div>
     );
 };

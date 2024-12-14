@@ -4,10 +4,10 @@ import '../css/home.css';
 
 function GoogleAuth(props) {
     return (
-        <div className="gauth-box">
+        <a href="http://localhost:5000/auth/google" className="gauth-box">
             <img src={googleIcon} alt="Google icon" />
             <p>{props.text}</p>
-        </div>
+        </a>
     )
 }
 

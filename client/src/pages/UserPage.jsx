@@ -26,13 +26,28 @@ function UserPage() {
         setClickProfile(prevState => !prevState)
     };
 
+    async function handlePostDelete(postId) {
+        setUserPosts(prevPosts => prevPosts.filter(post => post.blog_id !== postId))
+    };
+
+    async function handleSignOut() {
+        try {
+            await axios.post("/logout");
+            navigate("/");
+        } catch (error) {
+            console.error("Error during logout:", error.message);
+            alert("Failed to log out. Please try again.");
+        }
+    }
+
+
     return (
         <div>
             <div className="header" style={{ borderBottom: "none" }}>
                 <nav>
                     <p style={{
                         fontFamily: 'Titillium Web, sans-serif', fontSize: "1.5rem", textDecoration: "underline", cursor: "pointer"
-                    }} onClick={() => navigate("/")}>
+                    }} onClick={handleSignOut}>
                         Sign Out
                     </p>
                     <div className="nav-right">
@@ -56,6 +71,7 @@ function UserPage() {
                                 date={post.date_posted}
                                 initials={initials}
                                 username={username}
+                                onDelete={handlePostDelete}
                                 isOwnProfilePage={true}
                             />
                         </li>

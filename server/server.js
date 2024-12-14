@@ -6,10 +6,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import flash from "connect-flash";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import bcrypt from "bcrypt";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
+
 
 dotenv.config();
 
@@ -32,7 +33,11 @@ const pool = new Pool({
 
 pool.connect();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
+
 
 app.use(express.json());
 
@@ -45,7 +50,11 @@ app.use(session({
     }),
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    }
 }));
 
 passport.use(new LocalStrategy(async (username, password, done) => {
@@ -68,6 +77,26 @@ passport.use(new LocalStrategy(async (username, password, done) => {
     }
 }));
 
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        const response = await pool.query("SELECT * FROM user_account WHERE password = $1", [profile.id]);
+        let user = response.rows[0];
+
+        if (!user) {
+            const newUser = await pool.query("INSERT INTO user_account(username, password) VALUES($1, $2) RETURNING *", [profile.displayName, profile.id]);
+            user = newUser.rows[0];
+        }
+
+        return done(null, user);
+    } catch (error) {
+        return done(error);
+    }
+}));
+
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
     try {
@@ -81,7 +110,15 @@ passport.deserializeUser(async (id, done) => {
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
+
+// Google login
+app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Google callback
+app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
+    res.redirect('http://localhost:3000/blogs');
+});
+
 
 // create a new user
 app.post("/register", async (req, res) => {
@@ -106,7 +143,6 @@ app.post("/reset-password", async (params) => {
 app.post("/reset-password/:token", async (req, res) => {
     const { token } = req.params;
     const { newPassword } = req.body;
-    // Logic for verifying token and updating the password
     res.json({ message: "Password updated successfully!" });
 });
 
@@ -115,6 +151,8 @@ app.post("/reset-password/:token", async (req, res) => {
 app.post("/login", passport.authenticate("local"), async (req, res) => {
     const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [req.user.id]);
     const user = response.rows[0];
+    const rememberMe = req.body.rememberMe;
+    req.session.cookie.maxAge = rememberMe && 24 * 60 * 60 * 1000;
     res.json({ message: "Logged in successfully!", user: user });
 
 });
@@ -122,11 +160,13 @@ app.post("/login", passport.authenticate("local"), async (req, res) => {
 // show blog posts
 
 app.get("/blogs", async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized access!" });
+    }
+
     const id = req.user.id;
+
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ message: "Unauthorized access!" });
-        }
         const response = await pool.query("SELECT * FROM blog_post JOIN user_account ON user_account.id = blog_post.author_id");
         const userInitials = await pool.query("SELECT username FROM user_account WHERE id = $1", [id]);
         res.json({ blogs: response.rows, userInitials: userInitials.rows[0].username });
@@ -163,13 +203,15 @@ app.post("/post-blog", async (req, res) => {
 
 app.patch("/edit-post/:id", async (req, res) => {
     const { id } = req.params;
+    const iD = parseInt(id)
     const { title, content } = req.body;
+
 
     if (req.isAuthenticated()) {
         try {
             await pool.query(
-                "UPDATE blog_post SET title = $1, content = $2, date_updated = NOW() WHERE id = $3",
-                [title, content, id]
+                "UPDATE blog_post SET title = $1, content = $2, date_posted = NOW() WHERE id = $3",
+                [title, content, iD]
             );
             res.json({ message: "Post updated successfully!" });
         } catch (error) {
@@ -193,7 +235,6 @@ app.get("/edit-post/:id", async (req, res) => {
 
     try {
         const response = await pool.query("SELECT * FROM blog_post WHERE id = $1", [id]);
-        console.log(response.rows);
 
         const foundPost = response.rows[0];
         if (foundPost) {
@@ -219,6 +260,27 @@ app.delete("/delete/:id", async (req, res) => {
         res.status(401).json({ message: "Unauthorized access!" });
     }
 });
+
+app.post("/logout", (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            console.error("Logout error:", err);
+            return res.status(500).json({ message: "Failed to log out. Please try again." });
+        }
+
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Failed to destroy session:", err);
+                return res.status(500).json({ message: "Failed to log out. Please try again." });
+            }
+
+            res.clearCookie("connect.sid");
+            res.status(200).json({ message: "Logged out successfully!" });
+        });
+    });
+});
+
+
 
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);

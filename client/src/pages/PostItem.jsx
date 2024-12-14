@@ -2,9 +2,19 @@ import React from "react";
 import "../css/blogs.css";
 import UserProfile from "../components/UserProfile";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function PostItem(props) {
     const navigate = useNavigate();
+    async function handleDelete() {
+        try {
+            await axios.delete(`/delete/${props.id}`);
+            props.onDelete(props.id)
+        } catch (error) {
+            console.log(error.message);
+            alert("Post not found")
+        }
+    }
 
 
     return (
@@ -18,7 +28,7 @@ function PostItem(props) {
                 {props.isOwnProfilePage && (
                     <div className="actions">
                         <button onClick={() => navigate(`/edit-post/${props.id}`)} className="edit-btn">Edit</button>
-                        <button onClick={() => navigate(`/delete-post/${props.id}`)} className="delete-btn">Delete</button>
+                        <button onClick={handleDelete} className="delete-btn">Delete</button>
                     </div>
                 )}
 

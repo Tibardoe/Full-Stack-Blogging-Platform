@@ -13,6 +13,7 @@ function Login(props) {
     const [signup, setSignup] = useState(false);
     const [resetPassword, setResetPassword] = useState(false);
     const [exitAuth, setExitAuth] = useState(false);
+    const [remeberMe, setRememberMe] = useState(false);
     const [loginDetails, setLoginDetails] = useState({
         username: "",
         password: ""
@@ -25,7 +26,7 @@ function Login(props) {
         event.preventDefault();
 
         const { username, password } = loginDetails;
-        const response = await axios.post("/login", { username, password });
+        const response = await axios.post("/login", { username, password, remeberMe });
         if (response.data.user) {
             setUser(response.data.user);
             navigate("/blogs");
@@ -50,6 +51,10 @@ function Login(props) {
 
     function handleExit() {
         setExitAuth(true);
+    };
+
+    function handleRememberMe(event) {
+        setRememberMe(event.target.checked)
     };
 
     if (exitAuth) {
@@ -94,7 +99,7 @@ function Login(props) {
                             <div className="remember-section">
 
                                 <label className="remember-me">
-                                    <input type="checkbox" name="checkbox" />
+                                    <input onChange={handleRememberMe} type="checkbox" name="checkbox" />
                                     <span className="checkbox"></span>
                                     <p>Remember Me</p>
                                 </label>

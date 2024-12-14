@@ -30,6 +30,7 @@ function Blogs() {
     }, [navigate]);
 
 
+
     function handleClickProfile() {
         setClickProfile(prevState => !prevState)
     };
