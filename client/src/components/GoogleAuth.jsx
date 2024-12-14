@@ -4,7 +4,7 @@ import '../css/home.css';
 
 function GoogleAuth(props) {
     return (
-        <a href="http://localhost:5000/auth/google" className="gauth-box">
+        <a href="https://full-stack-blogging-platform.onrender.com/auth/google" className="gauth-box">
             <img src={googleIcon} alt="Google icon" />
             <p>{props.text}</p>
         </a>
