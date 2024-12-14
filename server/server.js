@@ -38,7 +38,7 @@ const pool = new Pool({
 pool.connect();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://freeedom.netlify.app',
     credentials: true,
 }));
 
@@ -120,7 +120,7 @@ app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'em
 
 // Google callback
 app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('http://localhost:3000/blogs');
+    res.redirect('https://freeedom.netlify.app/blogs');
 });
 
 
