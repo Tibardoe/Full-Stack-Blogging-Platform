@@ -24,7 +24,7 @@ function PostBlog() {
         event.preventDefault();
         const { title, content } = blog;
         try {
-            const response = await axios.post("/post-blog", { title, content });
+            await axios.post("/post-blog", { title, content });
             navigate("/blogs");
         } catch (error) {
             alert("Error posting blog")
