@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "../css/blogs.css";
 import Profile from '../components/Profile';
-import axios from "axios";
 
 function UserProfile(props) {
-    const [initials, setInitials] = useState();
-
-    console.log(initials);
-
 
     return (
         <div className="user-profile">

@@ -14,12 +14,15 @@ function UserPage() {
 
     useEffect(() => {
         const userPosts = async () => {
-            const response = await axios.get("/user-blogs");
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            const response = await axios.get(`${backendUrl}/user-blogs`, { withCredentials: true });
             setUserPosts(response.data.userBlogs || []);
         }
-
         userPosts();
     }, []);
+
+
+
 
 
     function handleClickProfile() {
@@ -32,7 +35,8 @@ function UserPage() {
 
     async function handleSignOut() {
         try {
-            await axios.post("/logout");
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
+            await axios.post(`${backendUrl}/logout`, { withCredentials: true });
             navigate("/");
         } catch (error) {
             console.error("Error during logout:", error.message);

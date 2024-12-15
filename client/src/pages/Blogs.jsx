@@ -16,7 +16,8 @@ function Blogs() {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await axios.get("/blogs");
+                const backendUrl = process.env.REACT_APP_BACKEND_URL;
+                const response = await axios.get(`${backendUrl}/blogs`, { withCredentials: true });
                 setBlogPosts(response.data.blogs);
                 setInitials(response.data.userInitials);
             } catch (error) {

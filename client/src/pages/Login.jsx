@@ -26,13 +26,15 @@ function Login(props) {
         event.preventDefault();
 
         const { username, password } = loginDetails;
-        const response = await axios.post("/login", { username, password, remeberMe });
+        const backendUrl = process.env.REACT_APP_BACKEND_URL;
+        const response = await axios.post(`${backendUrl}/login`, { username, password, remeberMe });
         if (response.data.user) {
             setUser(response.data.user);
             navigate("/blogs");
         }
 
     }
+
 
     function handleLoginDetails(event) {
         const { name, value } = event.target;
@@ -66,7 +68,7 @@ function Login(props) {
             <Signup />
             : resetPassword ?
                 <Reset /> :
-                <div className="auth-box">
+                <div className="auth-box" n={user}>
                     <div className="auth-card">
                         <svg onClick={handleExit} xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="#125938"
                             d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 8.4l3.6 3.6L7 15.6zm3.6 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22" />
