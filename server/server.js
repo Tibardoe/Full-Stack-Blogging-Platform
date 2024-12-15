@@ -37,15 +37,12 @@ const pool = new Pool({
 
 pool.connect();
 
-const corsOptions = {
+app.use(cors({
     origin: 'https://freeedom.netlify.app',
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type'],
     credentials: true
-};
-
-
-app.use(cors());
+}));
 
 app.use(express.json());
 
