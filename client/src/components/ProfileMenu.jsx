@@ -13,7 +13,7 @@ function ProfileMenu() {
     async function handleSignOut() {
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-            await axios.post(`${backendUrl}/logout`);
+            await axios.post(`${backendUrl}/logout`, { withCredentials: true });
             navigate("/");
         } catch (error) {
             console.error("Error during logout:", error.message);

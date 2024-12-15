@@ -31,7 +31,11 @@ function Signup() {
 
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
+<<<<<<< HEAD
             const response = await axios.post(`${backendUrl}/register`, { username, password });
+=======
+            const response = await axios.post(`${backendUrl}/register`, { username, password }, { withCredentials: true });
+>>>>>>> test-branch
             alert(response.data.message);
             navigate("/login");
         } catch (error) {

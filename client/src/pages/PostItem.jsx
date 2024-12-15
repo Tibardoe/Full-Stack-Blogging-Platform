@@ -9,7 +9,11 @@ function PostItem(props) {
     async function handleDelete() {
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
+<<<<<<< HEAD
             await axios.delete(`${backendUrl}/delete/${props.id}`);
+=======
+            await axios.delete(`${backendUrl}/delete/${props.id}`, { withCredentials: true });
+>>>>>>> test-branch
             props.onDelete(props.id)
         } catch (error) {
             console.log(error.message);
