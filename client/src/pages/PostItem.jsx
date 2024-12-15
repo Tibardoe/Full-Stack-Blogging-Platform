@@ -8,7 +8,7 @@ function PostItem(props) {
     const navigate = useNavigate();
     async function handleDelete() {
         try {
-            const backendUrl = process.env.BACKEND_URL;
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             await axios.delete(`${backendUrl}/delete/${props.id}`);
             props.onDelete(props.id)
         } catch (error) {

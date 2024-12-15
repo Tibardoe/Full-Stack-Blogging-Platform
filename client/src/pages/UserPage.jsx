@@ -14,7 +14,7 @@ function UserPage() {
 
     useEffect(() => {
         const userPosts = async () => {
-            const backendUrl = process.env.BACKEND_URL;
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/user-blogs`);
             setUserPosts(response.data.userBlogs || []);
         }
@@ -33,7 +33,7 @@ function UserPage() {
 
     async function handleSignOut() {
         try {
-            const backendUrl = process.env.BACKEND_URL;
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             await axios.post(`${backendUrl}/logout`);
             navigate("/");
         } catch (error) {

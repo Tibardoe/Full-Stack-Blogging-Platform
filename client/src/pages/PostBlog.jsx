@@ -24,7 +24,7 @@ function PostBlog() {
         event.preventDefault();
         const { title, content } = blog;
         try {
-            const backendUrl = process.env.BACKEND_URL;
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             await axios.post(`${backendUrl}/post-blog`, { title, content });
             navigate("/blogs");
         } catch (error) {

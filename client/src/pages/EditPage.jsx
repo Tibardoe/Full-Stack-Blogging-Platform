@@ -16,7 +16,7 @@ function EditPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const backendUrl = process.env.BACKEND_URL;
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             const response = await axios.get(`${backendUrl}/edit-post/${id}`);
             setEditPost(response.data.foundPost)
         }
@@ -32,7 +32,7 @@ function EditPage() {
         event.preventDefault();
         const { title, content } = editPost;
         try {
-            const backendUrl = process.env.BACKEND_URL;
+            const backendUrl = process.env.REACT_APP_BACKEND_URL;
             await axios.patch(`${backendUrl}/edit-post/${id}`, { title, content });
             alert("Post updated successfully!");
             navigate("/user-profile");
