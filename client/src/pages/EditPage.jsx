@@ -32,8 +32,8 @@ function EditPage() {
         event.preventDefault();
         const { title, content } = editPost;
         try {
-            const backendUrl = process.env.BACKEND_URL;
-            await axios.patch(`${backendUrl}/edit-post/${id}`, { title, content });
+            // const backendUrl = process.env.BACKEND_URL;
+            await axios.patch(`/edit-post/${id}`, { title, content });
             alert("Post updated successfully!");
             navigate("/user-profile");
         } catch (error) {
