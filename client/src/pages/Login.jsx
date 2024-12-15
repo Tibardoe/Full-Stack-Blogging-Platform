@@ -27,7 +27,7 @@ function Login(props) {
 
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
         const { username, password } = loginDetails;
-        const response = await axios.post(`${backendUrl}/login`, { username, password, remeberMe }, { withCredentials: true });
+        const response = await axios.post(`${backendUrl}/login`, { username, password, remeberMe });
         if (response.data.user) {
             setUser(response.data.user);
             navigate("/blogs");
