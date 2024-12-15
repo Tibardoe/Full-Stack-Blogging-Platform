@@ -45,7 +45,7 @@ const corsOptions = {
 };
 
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 
@@ -126,7 +126,7 @@ app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'em
 
 // Google callback
 app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('https://full-stack-blogging-platform.onrender.com/blogs');
+    res.redirect('https://freeedom.netlify.app/blogs');
 });
 
 
