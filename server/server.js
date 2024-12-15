@@ -39,9 +39,11 @@ pool.connect();
 
 const corsOptions = {
     origin: 'https://freeedom.netlify.app',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type'],
+    credentials: true
 };
+
 
 app.use(cors(corsOptions));
 
@@ -60,6 +62,8 @@ app.use(session({
     cookie: {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
+        secret: true,
+
     }
 }));
 
