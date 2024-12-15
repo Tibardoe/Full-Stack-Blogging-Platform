@@ -17,7 +17,7 @@ function Blogs() {
         const fetchBlogs = async () => {
             try {
                 const backendUrl = process.env.REACT_APP_BACKEND_URL;
-                const response = await axios.get(`${backendUrl}/blogs`);
+                const response = await axios.get(`${backendUrl}/blogs`, { withCredentials: true });
                 setBlogPosts(response.data.blogs);
                 setInitials(response.data.userInitials);
             } catch (error) {
