@@ -30,7 +30,8 @@ function Signup() {
         }
 
         try {
-            const response = await axios.post("/register", { username, password });
+            const backendUrl = process.env.BACKEND_URL;
+            const response = await axios.post(`${backendUrl}/register`, { username, password });
             alert(response.data.message);
             navigate("/login");
         } catch (error) {

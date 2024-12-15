@@ -12,7 +12,8 @@ function ProfileMenu() {
 
     async function handleSignOut() {
         try {
-            await axios.post("/logout");
+            const backendUrl = process.env.BACKEND_URL;
+            await axios.post(`${backendUrl}/logout`);
             navigate("/");
         } catch (error) {
             console.error("Error during logout:", error.message);

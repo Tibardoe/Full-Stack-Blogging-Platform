@@ -25,8 +25,9 @@ function Login(props) {
     async function handleLogin(event) {
         event.preventDefault();
 
+        const backendUrl = process.env.BACKEND_URL;
         const { username, password } = loginDetails;
-        const response = await axios.post("/login", { username, password, remeberMe });
+        const response = await axios.post(`${backendUrl}/login`, { username, password, remeberMe });
         if (response.data.user) {
             setUser(response.data.user);
             navigate("/blogs");

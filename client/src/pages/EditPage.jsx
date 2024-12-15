@@ -13,9 +13,11 @@ function EditPage() {
     const [editPost, setEditPost] = useState({ title: "", content: "" });
     const navigate = useNavigate();
 
+
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get(`/edit-post/${id}`);
+            const backendUrl = process.env.BACKEND_URL;
+            const response = await axios.get(`${backendUrl}/edit-post/${id}`);
             setEditPost(response.data.foundPost)
         }
 
@@ -30,7 +32,8 @@ function EditPage() {
         event.preventDefault();
         const { title, content } = editPost;
         try {
-            await axios.patch(`/edit-post/${id}`, { title, content });
+            const backendUrl = process.env.BACKEND_URL;
+            await axios.patch(`${backendUrl}/edit-post/${id}`, { title, content });
             alert("Post updated successfully!");
             navigate("/user-profile");
         } catch (error) {
