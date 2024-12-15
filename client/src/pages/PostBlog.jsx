@@ -25,11 +25,7 @@ function PostBlog() {
         const { title, content } = blog;
         try {
             const backendUrl = process.env.REACT_APP_BACKEND_URL;
-<<<<<<< HEAD
-            await axios.post(`${backendUrl}/post-blog`, { title, content });
-=======
             await axios.post(`${backendUrl}/post-blog`, { title, content }, { withCredentials: true });
->>>>>>> test-branch
             navigate("/blogs");
         } catch (error) {
             alert("Error posting blog")
