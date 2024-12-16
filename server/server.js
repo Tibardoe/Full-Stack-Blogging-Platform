@@ -60,9 +60,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        domain: "https://freeedom.netlify.app",
         maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        secure: false,
+        httpOnly: false,
+        secure: true,
         sameSite: "none"
 
     }
