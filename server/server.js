@@ -1,5 +1,4 @@
 import express from "express";
-import axios from "axios";
 import pkg from "pg";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -39,7 +38,13 @@ pool.connect();
 
 app.use(cors({
     origin: 'https://freeedom.netlify.app',
-    credentials: true
+    credentials: true,
+    optionsSuccessStatus: 200,
+    cookieDomain: true,
+    cookieEnabled: true,
+    exposedHeaders: ['Set-Cookie'],
+    sameSite: 'None',
+    secure: true
 }));
 
 app.use(express.json());
@@ -58,7 +63,7 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
         secret: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "none"
 
     }
