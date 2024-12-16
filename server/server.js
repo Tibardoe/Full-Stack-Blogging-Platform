@@ -39,8 +39,6 @@ pool.connect();
 
 app.use(cors({
     origin: 'https://freeedom.netlify.app',
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type'],
     credentials: true
 }));
 
