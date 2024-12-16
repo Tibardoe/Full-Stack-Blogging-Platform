@@ -123,7 +123,7 @@ app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'em
 
 // Google callback
 app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('https://freeedom.netlify.app/blogs');
+    res.redirect('https://full-stack-blogging-platform.onrender.com/blogs');
 });
 
 
