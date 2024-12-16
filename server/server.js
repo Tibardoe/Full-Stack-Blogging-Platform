@@ -39,12 +39,7 @@ pool.connect();
 app.use(cors({
     origin: 'https://freeedom.netlify.app',
     credentials: true,
-    optionsSuccessStatus: 200,
-    cookieDomain: true,
-    cookieEnabled: true,
-    exposedHeaders: ['Set-Cookie'],
     sameSite: 'None',
-    secure: true
 }));
 
 app.use(express.json());
@@ -60,7 +55,6 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        domain: "freeedom.netlify.app",
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: false,
         secure: true,
