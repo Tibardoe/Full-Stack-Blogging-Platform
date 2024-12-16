@@ -177,7 +177,6 @@ app.get("/blogs", async (req, res) => {
     }
 
     const id = req.user.id;
-    console.log(req.headers);
 
 
     try {
