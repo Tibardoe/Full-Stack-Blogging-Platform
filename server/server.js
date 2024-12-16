@@ -23,11 +23,6 @@ const pgSession = connectPgSimple(session);
 const port = 5000;
 
 const pool = new Pool({
-    // user: process.env.USER,
-    // host: process.env.HOST,
-    // password: process.env.PASSWORD.trim(),
-    // database: process.env.DATABASE,
-    // port: process.env.PORT,
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
@@ -133,7 +128,7 @@ app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'em
 
 // Google callback
 app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('https://freeedom.netlify.app/blogs');
+    res.redirect('http://localhost:3000/blogs');
 });
 
 
