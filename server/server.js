@@ -23,6 +23,11 @@ const pgSession = connectPgSimple(session);
 const port = 5000;
 
 const pool = new Pool({
+    // host: process.env.HOST,
+    // password: process.env.PASSWORD,
+    // database: process.env.DATABASE,
+    // port: process.env.PORT,
+    // user: process.env.USER
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
@@ -31,20 +36,15 @@ const pool = new Pool({
 
 pool.connect();
 
-// app.use(cors({
-//     origin: 'https://freeedom.netlify.app',
-//     credentials: true,
-//     optionsSuccessStatus: 200,
-//     cookieDomain: true,
-//     cookieEnabled: true,
-//     exposedHeaders: ['Set-Cookie'],
-//     sameSite: 'None',
-//     secure: true
-// }));
-
 app.use(cors({
-    origin: "http://localhost:3000",
-    credentials: true
+    origin: 'https://freeedom.netlify.app',
+    credentials: true,
+    optionsSuccessStatus: 200,
+    cookieDomain: true,
+    cookieEnabled: true,
+    exposedHeaders: ['Set-Cookie'],
+    sameSite: 'None',
+    secure: true
 }));
 
 app.use(express.json());
@@ -62,11 +62,14 @@ app.use(session({
     cookie: {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: true,
-        // sameSite: "none"
+        secure: false,
+        sameSite: "none"
 
     }
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use(new LocalStrategy(async (username, password, done) => {
     try {
@@ -119,15 +122,12 @@ passport.deserializeUser(async (id, done) => {
     };
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 // Google login
 app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // Google callback
 app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('http://localhost:3000/blogs');
+    res.redirect('https://freeedom.netlify.app/blogs');
 });
 
 
@@ -162,6 +162,7 @@ app.post("/reset-password/:token", async (req, res) => {
 app.post("/login", passport.authenticate("local"), async (req, res) => {
     const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [req.user.id]);
     const user = response.rows[0];
+
     const rememberMe = req.body.rememberMe;
     req.session.cookie.maxAge = rememberMe && 24 * 60 * 60 * 1000;
     res.json({ message: "Logged in successfully!", user: user });
@@ -176,6 +177,8 @@ app.get("/blogs", async (req, res) => {
     }
 
     const id = req.user.id;
+    console.log(req.headers);
+
 
     try {
         const response = await pool.query("SELECT * FROM blog_post JOIN user_account ON user_account.id = blog_post.author_id");
