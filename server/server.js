@@ -23,19 +23,11 @@ const pgSession = connectPgSimple(session);
 const port = 5000;
 
 const pool = new Pool({
-<<<<<<< HEAD
-    // host: process.env.HOST,
-    // password: process.env.PASSWORD,
-    // database: process.env.DATABASE,
-    // port: process.env.PORT,
-    // user: process.env.USER
-=======
     // user: process.env.USER,
     // host: process.env.HOST,
     // password: process.env.PASSWORD.trim(),
     // database: process.env.DATABASE,
     // port: process.env.PORT,
->>>>>>> fix
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
@@ -45,9 +37,8 @@ const pool = new Pool({
 pool.connect();
 
 app.use(cors({
-    origin: 'https://freeedom.netlify.app',
-    credentials: true,
-    sameSite: 'None',
+    origin: 'http://localhost:3000',
+    credentials: true
 }));
 
 app.use(express.json());
@@ -65,8 +56,8 @@ app.use(session({
     cookie: {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: false,
-        secure: true,
-        sameSite: "none"
+        secure: false,
+        sameSite: "lax"
 
     }
 }));
@@ -130,7 +121,7 @@ app.get("/auth/google", passport.authenticate('google', { scope: ['profile', 'em
 
 // Google callback
 app.get("/auth/google/blogs", passport.authenticate('google', { failureRedirect: '/' }), (req, res) => {
-    res.redirect('https://freeedom.netlify.app/blogs');
+    res.redirect('http://freeedom.netlify.app/blogs');
 });
 
 
