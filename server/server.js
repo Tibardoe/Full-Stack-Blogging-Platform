@@ -23,11 +23,19 @@ const pgSession = connectPgSimple(session);
 const port = 5000;
 
 const pool = new Pool({
+<<<<<<< HEAD
     // host: process.env.HOST,
     // password: process.env.PASSWORD,
     // database: process.env.DATABASE,
     // port: process.env.PORT,
     // user: process.env.USER
+=======
+    // user: process.env.USER,
+    // host: process.env.HOST,
+    // password: process.env.PASSWORD.trim(),
+    // database: process.env.DATABASE,
+    // port: process.env.PORT,
+>>>>>>> fix
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
