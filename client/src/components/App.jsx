@@ -8,7 +8,6 @@ import Blogs from "../pages/Blogs";
 import UserPage from '../pages/UserPage';
 import EditPage from '../pages/EditPage';
 import PostBlog from '../pages/PostBlog';
-import GoogleAuth from './GoogleAuth';
 
 function App() {
     return (
