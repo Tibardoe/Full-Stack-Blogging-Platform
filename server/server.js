@@ -57,7 +57,7 @@ app.use(session({
 }));
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://freeedom.netlify.app',
     credentials: true
 }));
 
