@@ -57,7 +57,7 @@ app.use(session({
 }));
 
 app.use(cors({
-    origin: 'https://freeedom.netlify.app',
+    origin: 'http://localhost:3000',
     credentials: true
 }));
 
@@ -289,5 +289,5 @@ app.post("/logout", (req, res) => {
 
 
 app.listen(port, () => {
-    console.log(`Server running on https://localhost:${port}`);
+    console.log(`Server running on http://localhost:${port}`);
 });
