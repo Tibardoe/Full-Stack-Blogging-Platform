@@ -57,7 +57,7 @@ app.use(session({
 }));
 
 app.use(cors({
-    origin: 'https://dapper-banoffee-c7776e.netlify.app',
+    origin: 'https://freeedom.netlify.app',
     credentials: true
 }));
 
