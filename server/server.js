@@ -36,11 +36,6 @@ const pool = new Pool({
 
 pool.connect();
 
-app.use(cors({
-    origin: 'https://freeedom.netlify.app',
-    credentials: true
-}));
-
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -56,9 +51,16 @@ app.use(session({
     cookie: {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        // secure: process.env.NODE_ENV === "production",
+        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        secure: true,
+        sameSite: "none"
     }
+}));
+
+app.use(cors({
+    origin: 'https://freeedom.netlify.app',
+    credentials: true
 }));
 
 app.use(passport.initialize());
