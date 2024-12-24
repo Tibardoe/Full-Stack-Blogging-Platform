@@ -56,7 +56,6 @@ app.use(session({
     }
 }));
 
-
 app.use(cors({
     origin: 'https://freeedom.netlify.app',
     credentials: true
@@ -154,14 +153,35 @@ app.post("/reset-password/:token", async (req, res) => {
 // create login
 
 app.post("/login", passport.authenticate("local"), async (req, res) => {
-    const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [req.user.id]);
-    const user = response.rows[0];
+    try {
+        // Fetch user details from the database
+        const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [req.user.id]);
+        const user = response.rows[0];
 
-    const rememberMe = req.body.rememberMe;
-    req.session.cookie.maxAge = rememberMe && 24 * 60 * 60 * 1000;
-    res.json({ message: "Logged in successfully!", user: user });
+        // Handle "Remember Me" functionality
+        const rememberMe = req.body.rememberMe;
+        if (rememberMe) {
+            req.session.cookie.maxAge = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+        } else {
+            req.session.cookie.expires = false; // Session expires when browser is closed
+        }
 
+        // Save the session explicitly before sending the response
+        req.session.save((err) => {
+            if (err) {
+                console.error("Error saving session:", err);
+                return res.status(500).json({ message: "Failed to save session" });
+            }
+
+            // Respond with user details
+            res.json({ message: "Logged in successfully!", user: user });
+        });
+    } catch (err) {
+        console.error("Error during login:", err);
+        res.status(500).json({ message: "An error occurred during login" });
+    }
 });
+
 
 // show blog posts
 
