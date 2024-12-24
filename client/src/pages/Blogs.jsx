@@ -16,13 +16,14 @@ function Blogs() {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                axios.defaults.withCredentials = true;
                 const backendUrl = process.env.REACT_APP_BACKEND_URL;
                 const response = await axios.get(`${backendUrl}/blogs`, { withCredentials: true });
                 setBlogPosts(response.data.blogs);
                 setInitials(response.data.userInitials);
             } catch (error) {
                 alert("Unauthorized access")
+                console.log(`Error caught: ${error.message}`);
+
                 navigate("/")
             }
 

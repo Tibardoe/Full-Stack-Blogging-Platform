@@ -25,7 +25,6 @@ function Login(props) {
     async function handleLogin(event) {
         event.preventDefault();
 
-        axios.defaults.withCredentials = true;
         const { username, password } = loginDetails;
         const backendUrl = process.env.REACT_APP_BACKEND_URL;
         const response = await axios.post(`${backendUrl}/login`, { username, password, remeberMe }, { withCredentials: true });
