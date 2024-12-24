@@ -59,7 +59,7 @@ app.use(session({
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set `true` in production
         // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // "none" for cross-origin
-        sameSite: "none"
+        sameSite: "strict"
     }
 }));
 
