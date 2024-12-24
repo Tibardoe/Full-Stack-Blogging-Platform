@@ -49,12 +49,13 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        secure: process.env.NODE_ENV === "production", // Set `true` in production
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // "none" for cross-origin
     }
 }));
+
 
 app.use(cors({
     origin: 'https://freeedom.netlify.app',
