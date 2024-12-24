@@ -49,7 +49,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: rememberMe ? 24 * 60 * 60 * 1000 : null,
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set `true` in production
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // "none" for cross-origin
