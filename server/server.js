@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: "https://freeedom.netlify.app",
+    origin: ["https://freeedom.netlify.app", "http://localhost:3000"],
     credentials: true
 }));
 
