@@ -40,6 +40,11 @@ app.use(express.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cors({
+    origin: "https://freeedom.netlify.app",
+    credentials: true
+}));
+
 app.use(session({
     store: new pgSession({
         pool: pool,
@@ -49,16 +54,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        domain: "netlify.app",
         maxAge: 24 * 60 * 60 * 1000, // 1 day
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set `true` in production
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // "none" for cross-origin
     }
-}));
-
-app.use(cors({
-    origin: 'https://freeedom.netlify.app',
-    credentials: true
 }));
 
 app.use(passport.initialize());
