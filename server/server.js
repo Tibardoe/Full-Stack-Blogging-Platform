@@ -56,9 +56,12 @@ app.use(session({
     cookie: {
         domain: process.env.NODE_ENV === "production" ? "freeedom.netlify.app" : undefined,
         maxAge: 24 * 60 * 60 * 1000, // 1 day
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Set `true` in production
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // "none" for cross-origin
+        httpOnly: false,
+        secure: false,
+        sameSite: "lax"
+        // httpOnly: true,
+        // secure: process.env.NODE_ENV === "production", // Set `true` in production
+        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // "none" for cross-origin
     }
 }));
 
