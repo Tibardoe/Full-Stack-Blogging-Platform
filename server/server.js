@@ -157,6 +157,8 @@ app.post("/reset-password/:token", async (req, res) => {
 // create login
 
 app.post("/login", passport.authenticate("local"), async (req, res) => {
+    console.log('Session:', req.session);
+    console.log('User:', req.user);
     const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [req.user.id]);
     const user = response.rows[0];
 
@@ -169,6 +171,8 @@ app.post("/login", passport.authenticate("local"), async (req, res) => {
 // show blog posts
 
 app.get("/blogs", async (req, res) => {
+    console.log('Session:', req.session);
+    console.log('User:', req.user);
     if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Unauthorized access!" });
     }
