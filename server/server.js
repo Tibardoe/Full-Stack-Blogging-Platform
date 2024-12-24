@@ -110,6 +110,7 @@ passport.use(new GoogleStrategy({
 
 passport.serializeUser((user, done) => done(null, user.id));
 passport.deserializeUser(async (id, done) => {
+    console.log('Deserializing user with id:', id);
     try {
         const response = await pool.query("SELECT * FROM user_account WHERE id = $1", [id]);
         const user = response.rows[0];
