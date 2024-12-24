@@ -57,7 +57,6 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        domain: process.env.NODE_ENV === "production" ? "freeedom.netlify.app" : undefined,
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Set `true` in production
